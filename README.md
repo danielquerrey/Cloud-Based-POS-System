@@ -1,5 +1,6 @@
 # Cloud-Based-POS-System
-- Under Construction -
+
+  Under Construction 
 
   Current School Project
 
