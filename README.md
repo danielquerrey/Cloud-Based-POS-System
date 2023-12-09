@@ -19,16 +19,6 @@ This project is the result of a semester-long effort in software engineering, fo
 
 - **Deployment**: Our Minimum Viable Product (MVP) was deployed and updated regularly, ensuring a continuously functional system.
 
-## Learning Objectives Achieved
-
-By successfully completing this project, our team gained the following skills and knowledge:
-
-- Applied Agile development methodology to software design.
-- Designed and verified a publicly hosted web application with POS services.
-- Integrated multiple aspects of accessibility into a software product.
-- Conducted user studies and adapted our product based on user feedback.
-- Utilized configuration management by creating and using a Git repository for our project files.
-
 ## Live Demo
 
 Our project is demonstrated through a live demo that showcases the following:
@@ -40,6 +30,8 @@ Our project is demonstrated through a live demo that showcases the following:
 - User management functionalities.
 - Various reports, including product usage, sales, excess, restock, and more.
 - Compliance with WCAG 2.1 accessibility principles.
+
+**Web-Hosted Application**: You can access our live application by clicking [here](https://piadapos.azurewebsites.net/). Please note that this application is designed for 1080p ratio devices, and users must sign up for the order online application to create real-time orders.
 
 ## External API Integrations
 
