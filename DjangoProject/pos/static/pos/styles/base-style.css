@@ -1,0 +1,20 @@
+html,
+body {
+    min-height: 100% !important;
+    height: 100% !important;
+}
+
+body {
+    background-image: url("../images/piada-store-background.jpg");
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center center;
+    width: 100vw;
+    height: 100vh;
+}
+
+#google_translate_element .skiptranslate select {
+    background-color: #fff !important;
+    color: #000 !important;
+    border: none;
+}

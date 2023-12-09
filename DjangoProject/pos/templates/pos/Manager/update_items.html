@@ -1,0 +1,127 @@
+{% extends 'pos/base.html' %}
+{% block title %}Piadas | Manager View{% endblock %}
+{% load static %}
+
+{% block morehead %}
+    <script src="{% static 'pos/javascript/update_items.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'pos/styles/manager_home-style.css' %}" />
+    <!-- Include jQuery for AJAX requests -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+{% endblock %}
+
+{% block content %}
+
+    {% csrf_token %}
+<!-- Main div container  -->
+    <div class="row p-0 m-0">
+        <!-- Category buttons column -->
+        <div id="category-list" class="cashier-col d-flex flex-column align-items-center col-2 bg-secondary p-0">
+            <h2 class="text-center">Categories</h2>
+            <button onclick="changeCategory('piadas')" class="category mb-3">
+                <div class="d-flex justify-content-center align-items-center h-100">
+                    <h3>Piadas</h3>
+                </div>
+            </button>
+            <button onclick="changeCategory('salads')" class="category mb-3">
+                <div class="d-flex justify-content-center align-items-center h-100">
+                    <h3>Salads</h3>
+                </div>
+            </button>
+            <button onclick="changeCategory('pastas')" class="category mb-3">
+                <div class="d-flex justify-content-center align-items-center h-100">
+                    <h3>Pastas</h3>
+                </div>
+            </button>
+            <button onclick="changeCategory('sides')" class="category mb-3">
+                <div class="d-flex justify-content-center align-items-center h-100">
+                    <h3>Sides</h3>
+                </div>
+            </button>
+            <button onclick="changeCategory('drinks')" class="category mb-3">
+                <div class="d-flex justify-content-center align-items-center h-100">
+                    <h3>Drinks</h3>
+                </div>
+            </button>
+            <button onclick="changeCategory('kids')" class="category mb-3">
+                <div class="d-flex justify-content-center align-items-center h-100">
+                    <h3>Kids</h3>
+                </div>
+            </button>
+            <button onclick="changeCategory('create')" class="category mb-3">
+                <div class="d-flex justify-content-center align-items-center h-100">
+                    <h3>Create</h3>
+                </div>
+            </button>
+            <button onclick="changeCategory('seasonal')" class="category mb-3">
+                <div class="d-flex justify-content-center align-items-center h-100">
+                    <h3>Seasonal</h3>
+                </div>
+            </button>
+        </div>
+        <!-- Item buttons column -->
+        <div class="cashier-col col-8 bg-gray px-auto">
+            <h2 class="text-center">Items</h2>
+            <div>
+                <div id="item-list" class="d-flex row justify-content-center">
+                    {% for i in items %}
+                        <button onclick="select_item('{{ i.id }}')" value="{{i.id}}" class="item d-flex justify-content-center align-items-center visually-hidden">
+                            <h3 id="name">{{ i.common_name }}</h3>
+                            <p id="category" class="visually-hidden">{{ i.category }}</p>
+                        </button>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <!-- Item buttons column -->
+        <div id="category-list" class="cashier-col d-flex flex-column align-items-center col-2 bg-secondary p-0">
+            <h2 class="text-center">Select Change</h2>
+            <div>
+                <button onclick="select_edit()" value="{{i.id}}" class="category mb-3">
+                    <div class="d-flex justify-content-center align-items-center h-100 p-2">
+                        <h3 id="name">Edit</h3>
+                    </div>
+                </button>
+            </div>
+            <div>
+                <button onclick="select_delete()" value="{{i.id}}" class="category mb-3">
+                    <div class="d-flex justify-content-center align-items-center h-100 p-2">
+                        <h3 id="name">Delete</h3>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+{% endblock content %}
+ {% block javaScript %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Find all <a> elements within .navbar-nav
+        var navLinks = document.querySelectorAll(".navbar-nav .nav-link");
+
+        // Iterate over each link
+        navLinks.forEach(function (link) {
+            // Check if the text content of the link is 'About'
+            if (link.textContent.trim() === "About") {
+                // Remove the 'active' class
+                link.classList.remove("active");
+            }
+
+            // Check if the text content of the link is 'Manager'
+            if (link.textContent.trim() === "Manager") {
+                // Add the 'active' class
+                link.classList.add("active");
+            }
+        });
+    });
+</script>
+<script>
+    function hideCartContainer() {
+        var cartContainer = document.getElementById("checkout-btn");
+        if (cartContainer.style.display !== "none") {
+            cartContainer.style.display = "none";
+        }
+    }
+    hideCartContainer();
+</script>
+{% endblock javaScript%}

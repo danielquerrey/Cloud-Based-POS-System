@@ -1,0 +1,62 @@
+{% extends 'pos/base.html' %} {% block title %}Piadas | Manager View{% endblock %} {% load static %} {% block morehead %}
+<script src="{% static 'pos/javascript/ingredients.js' %}"></script>
+<link rel="stylesheet" href="{% static 'pos/styles/manager_home-style.css' %}" />
+<!-- Include jQuery for AJAX requests -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+{% endblock %} {% block content %} {% csrf_token %}
+<!-- Main div container  -->
+<div class="row col-12 p-0 m-0">
+    <!-- graph column -->
+    <div class="cashier-col bg-gray col-5 p-0 position-relative">
+        <div id="graph-container"></div>
+    </div>
+    <!-- Category buttons column -->
+    <div id="update-stock" class="cashier-col d-flex flex-column align-items-center col-2 bg-secondary p-0">
+        <!-- Input box will be dynamically added here -->
+    </div>
+    <!-- Item buttons column -->
+    <div class="cashier-col col-5 bg-gray px-auto">
+        <h2 class="text-center">Ingredients</h2>
+        <div>
+            <div id="item-list" class="d-flex row justify-content-center">
+                {% for i in ingredients %}
+                <button onclick="showStockUpdate('{{ i.id }}', '{{ i.common_name }}', {{ i.stock }})" value="{{ i.id }}" class="item d-flex justify-content-center align-items-center">
+                    <h3 id="name">{{ i.common_name }}</h3>
+                </button>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %} {% block javaScript %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Find all <a> elements within .navbar-nav
+        var navLinks = document.querySelectorAll(".navbar-nav .nav-link");
+
+        // Iterate over each link
+        navLinks.forEach(function (link) {
+            // Check if the text content of the link is 'About'
+            if (link.textContent.trim() === "About") {
+                // Remove the 'active' class
+                link.classList.remove("active");
+            }
+
+            // Check if the text content of the link is 'Manager'
+            if (link.textContent.trim() === "Manager") {
+                // Add the 'active' class
+                link.classList.add("active");
+            }
+        });
+    });
+</script>
+<script>
+    function hideCartContainer() {
+        var cartContainer = document.getElementById("checkout-btn");
+        if (cartContainer.style.display !== "none") {
+            cartContainer.style.display = "none";
+        }
+    }
+    hideCartContainer();
+</script>
+{% endblock javaScript%}

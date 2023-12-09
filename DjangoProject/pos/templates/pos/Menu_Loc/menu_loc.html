@@ -1,0 +1,229 @@
+{% extends 'pos/base.html' %}
+{% block title %}Piadas | Menu{% endblock %}
+
+{% load static %}
+
+{% block morehead %}
+    <script src="{% static 'pos/javascript/cashier.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'pos/styles/menu_loc.css' %}" />
+{% endblock %}
+
+{% block content %}
+        <!-- Desktop Elements -->
+        <p id="user-id" class="visually-hidden">{{ user.id }}</p>
+        <div id="menu_loc">
+            <div class="" id="content-container">
+                <div class="" id="content-store" onclick="default_item_active()">
+                    <div id="dropdown-container">
+                        {% if user.is_authenticated %}
+                        <h1 id="myStore-header">View Locations {{user.username}}</h1>
+                        {% else %}
+                        <h1 id="myStore-header">View Locations</h1>
+                        {% endif %}
+    
+                        <!-- <select id="store-dropdown">
+                            <option value="Dallas">Dallas</option>
+                            <option value="Houston">Houston</option>
+                            <option value="College Station">College Station</option>
+                        </select> -->
+                        {% if user.store == 'cstat' %}
+                                    <p class="visually-hidden" id="cstat">1025 UNIVERSITY DR.
+                                        SUITE 109
+                                        COLLEGE STATION, TX 77845</p>
+                                {% elif user.store == 'dallas' %}
+                                    <p class="visually-hidden" id="dallas">3309 DALLAS PKWY #401, PLANO, TX 75093</p>
+                                {% elif user.store == 'houston' %}
+                                    <p class="visually-hidden" id="houston">5801 MEMORIAL DR, HOUSTON, TX 77007</p>
+                                {% else %}
+                                    <p class="visually-hidden">No store selected</p>
+                                {% endif %}
+                        <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="store-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            Select Store
+                        </a>
+                        <ul class="dropdown-menu" style="" aria-labelledby="store-dropdown">
+                            <li><button class="dropdown-item" id="item-dropdown" onclick="changeStore('cstat')">COLLEGE STATION</button></li>
+                            <li><button class="dropdown-item" id="item-dropdown" onclick="changeStore('dallas')">DALLAS</button></li>
+                            <li><button class="dropdown-item"  id="item-dropdown"  onclick="changeStore('houston')">HOUSTON</button></li>
+                        </ul>
+    
+                    </div>
+    
+                    <div id="map-container">
+                        
+                        <iframe id="store-map"
+                                    src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d13733.380577348591!2d-96.3395247!3d30.6242291!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x864683948b74be99%3A0xa73f7a8f8c500ffd!2sPiada%20Italian%20Street%20Food!5e0!3m2!1sen!2sus!4v1699135351535!5m2!1sen!2sus"
+                                    width="80%"
+                                    height="100%"
+                                    style="border: 5px solid black; border-radius: 30px; margin-top: 3vh"
+                                    allowfullscreen=""
+                                    loading="lazy"
+                                    referrerpolicy="no-referrer-when-downgrade"
+                        ></iframe>
+                    </div>
+                </div>
+    
+                <div class="" id="content-menu">
+                    <div id="menu-bar">
+                        <span>
+                            <button class="menu-btn" id="btn-piadas" onclick="category_active.call(this)" onfocus="" onblur="">piadas</button>
+                            <button class="menu-btn" id="btn-salads" onclick="category_active.call(this)" onfocus="" onblur="">salads</button>
+                            <button class="menu-btn" id="btn-pastas" onclick="category_active.call(this)" onfocus="" onblur="">pastas</button>
+                            <button class="menu-btn" id="btn-sides" onclick="category_active.call(this)" onfocus="" onblur="">sides</button>
+                            <button class="menu-btn" id="btn-drinks" onclick="category_active.call(this)" onfocus="" onblur="">drinks</button>
+                            <button class="menu-btn" id="btn-kids" onclick="category_active.call(this)" onfocus="" onblur="">kids</button>
+                            <button class="menu-btn" id="btn-Create Your Own" onclick="category_active.call(this)" onfocus="" onblur="">Create Your Own</button>
+                            <button class="menu-btn" id="btn-Seasonal" onclick="category_active.call(this)" onfocus="" onblur="">Seasonal</button>
+                        </span>
+                    </div>
+                    <div id="display-items" >
+                        <div id="default-item">
+                            <h1>Select a category!</h1>
+                        </div>
+                        <div class="item" id="piadas-items" style="display: none;">
+                            {% for i in items %} {% if i.category == 'piadas' %}
+                            <div class="" id="menu-item-wrapper">
+                                <h5 class="">{{ i.common_name }}</h5>
+                                {% if i.img_source is not None %}
+                                    <img src="{{ i.img_source }}" alt="Picture of {{ i.common_name }}">
+                                {% endif %}
+                                {% if i.description is not none %}
+                                    <p><small>{{ i.description }}</small></p>
+                                {% endif %}
+                                <br>
+                                <p id="price">${{ i.price }}</p>
+                                <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+                            </div>
+                            {% endif %} {% endfor %}
+                        </div>
+                        <div class="item" id="salads-items" style="display: none">
+                            {% for i in items %} {% if i.category == 'salads' %}
+                            <div class="" id="menu-item-wrapper">
+                                <h5 class="">{{ i.common_name }}</h5>
+                                {% if i.img_source is not None %}
+                                    <img src="{{ i.img_source }}" alt="Picture of {{ i.common_name }}">
+                                {% endif %}
+                                {% if i.description is not none %}
+                                    <p><small>{{ i.description }}</small></p>
+                                {% endif %}
+                                <br>
+                                <p id="price">${{ i.price }}</p>
+                                <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+                            </div>
+                            {% endif %} {% endfor %}
+                        </div>
+                        <div class="item" id="pastas-items" style="display: none">
+                            {% for i in items %} {% if i.category == 'pastas' %}
+                            <div class="" id="menu-item-wrapper">
+                                <h5 class="">{{ i.common_name }}</h5>
+                                {% if i.img_source is not None %}
+                                    <img src="{{ i.img_source }}" alt="Picture of {{ i.common_name }}">
+                                {% endif %}
+                                {% if i.description is not none %}
+                                    <p><small>{{ i.description }}</small></p>
+                                {% endif %}
+                                <br>
+                                <p id="price">${{ i.price }}</p>
+                                <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+                            </div>
+                            {% endif %} {% endfor %}
+                        </div>
+                        <div class="item" id="sides-items" style="display: none">
+                            {% for i in items %} {% if i.category == 'sides' %}
+                            <div class="" id="menu-item-wrapper">
+                                <h5 class="">{{ i.common_name }}</h5>
+                                {% if i.img_source is not None %}
+                                    <img src="{{ i.img_source }}" alt="Picture of {{ i.common_name }}">
+                                {% endif %}
+                                {% if i.description is not none %}
+                                    <p><small>{{ i.description }}</small></p>
+                                {% endif %}
+                                <br>
+                                <p id="price">${{ i.price }}</p>
+                                <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+                            </div>
+                            {% endif %} {% endfor %}
+                        </div>
+                        <div class="item" id="drinks-items" style="display: none">
+                            {% for i in items %} {% if i.category == 'drinks' %}
+                            <div class="" id="menu-item-wrapper">
+                                <h5 class="">{{ i.common_name }}</h5>
+                                {% if i.img_source is not None %}
+                                    <img src="{{ i.img_source }}" alt="Picture of {{ i.common_name }}">
+                                {% endif %}
+                                {% if i.description is not none %}
+                                    <p><small>{{ i.description }}</small></p>
+                                {% endif %}
+                                <br>
+                                <p id="price">${{ i.price }}</p>
+                                <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+                            </div>
+                            {% endif %} {% endfor %}
+                        </div>
+                        <div class="item" id="kids-items" style="display: none">
+                            {% for i in items %} {% if i.category == 'kids' %}
+                            <div class="" id="menu-item-wrapper">
+                                <h5 class="">{{ i.common_name }}</h5>
+                                {% if i.img_source is not None %}
+                                    <img src="{{ i.img_source }}" alt="Picture of {{ i.common_name }}">
+                                {% endif %}
+                                {% if i.description is not none %}
+                                    <p><small>{{ i.description }}</small></p>
+                                {% endif %}
+                                <br>
+                                <p id="price">${{ i.price }}</p>
+                                <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+                            </div>
+                            {% endif %} {% endfor %}
+                        </div>
+                        <div class="item" id="Create Your Own-items" style="display: none">
+                            {% for i in items %} {% if i.category == 'create' %}
+                            <div class="" id="menu-item-wrapper">
+                                <h5 class="">{{ i.common_name }}</h5>
+                                {% if i.img_source is not None %}
+                                    <img src="{{ i.img_source }}" alt="Picture of {{ i.common_name }}">
+                                {% endif %}
+                                {% if i.description is not none %}
+                                    <p><small>{{ i.description }}</small></p>
+                                {% endif %}
+                                <br>
+                                <p id="price">${{ i.price }}</p>
+                                <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+                            </div>
+                            {% endif %} {% endfor %}
+                        </div>
+                        <div class="item" id="Seasonal-items" style="display: none">
+                            {% for i in items %} {% if i.category == 'seasonal' %}
+                            <div class="" id="menu-item-wrapper">
+                                <h5 class="">{{ i.common_name }}</h5>
+                                {% if i.img_source is not None %}
+                                    <img src="{{ i.img_source }}" alt="Picture of {{ i.common_name }}">
+                                {% else %}
+                                    <br>
+                                {% endif %}
+                                {% if i.description is not none %}
+                                    <p><small>{{ i.description }}</small></p>
+                                {% endif %}
+                                <br>
+                                <p id="price">${{ i.price }}</p>
+                                <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+                            </div>
+                            {% endif %} {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <script>
+          
+        </script>
+
+        <!-- Mobile Elements -->
+    </body>
+</html>
+
+{% endblock %}
+{% block javaScript %}
+<script src="{% static 'pos/javascript/menu_loc.js' %}"></script>
+{% endblock javaScript%}

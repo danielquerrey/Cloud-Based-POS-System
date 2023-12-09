@@ -1,0 +1,51 @@
+{% extends 'pos/base.html' %} {% block title %}Piadas | About{% endblock %}
+
+<!-- load the static folder for django -->
+{% load static %} {% block morehead %}
+<!-- <script src="{% static 'pos/javascript/account_details.js' %}"></script> -->
+<link rel="stylesheet" href="{% static 'pos/styles/menu_loc.css' %}" />
+<link rel="stylesheet" href="{% static 'pos/styles/landing.css' %}" />
+
+{% endblock %} {% block content %}
+<div id="about-landing-container">
+    <div id="staff-landing-container">
+        <div id="landing-container">
+            <div class="" id="landing-container">
+                <!-- 
+                Menu & Current Store
+                Create Order
+                Order History
+                Account Details
+                    - personal info
+                    - recent orders
+                    - favorite orders
+             -->
+                <div class="w-100" id="landing-welcome">
+                    <div class="mx-auto" id="h1-wrapper">
+                        <img src="{% static '/pos/images/title-logo.png' %}" />
+                    </div>
+                </div>
+
+                <div class="" id="landing-mid">
+                    <div class="" id="mid-wrapper">
+                        <!-- <a href="{% url 'Menu Location' %}">
+                            <button id="menu-btn">The Menu</button>
+                        </a>
+                        <a href="{% url 'Account Details' %}">
+                            <button id="account-btn">My Account</button>
+                        </a> -->
+                        <p  id="p-wrapper" class="corner-top" style="font-weight: 500;" >
+                            <em class="upper" style="color: rgb(244, 128, 36); font-weight: 800;">We are passionate about food</em> and about sharing it with others. We believe in eating well even when we need to eat fast. Great food starts with a few
+                            simple, fresh ingredients and someone who knows how to bring the best flavors to life. Every Piada is run by a chef — not a manager — who will personally greet you as you
+                            step up to the stone.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="" id="landing-footer"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

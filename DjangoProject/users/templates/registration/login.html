@@ -1,0 +1,36 @@
+{% extends "pos/base.html" %}
+
+{% block content %}
+    <div class="w-100 content-section shadow p-4 mb-5 mt-3 bg-body rounded">
+        <form method="POST">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Login</legend>        
+                <div class="mb-3">
+                    <input type="text" class="form-control" name="username", placeholder="Username">
+                </div>
+                <div class="mb-3">
+                    <input type="password" class="form-control" name="password", placeholder="Password">
+                </div>
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-info" type="submit">Login</button>
+            </div>
+            <div>
+            </div>
+        </form>
+        <div class="border-top pt-3">
+            <small class="text-muted">
+                Need An Account? <a class="ml-2" href="{% url 'register' %}">Sign Up</a>
+            </small>
+            <small class="text-muted">
+                or Login with <a href="{% url 'social:begin' 'google-oauth2' %}" a class="ml-2">Google</a>
+            </small>
+        </div>
+    </div>
+{% endblock content %}
+{% block javaScript %}
+<script>
+    
+</script>
+{% endblock javaScript%}

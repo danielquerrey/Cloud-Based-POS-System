@@ -1,0 +1,179 @@
+{% extends 'pos/base.html' %}
+{% block title %}Piadas | Edit Order{% endblock %}
+
+<!-- load the static folder for django -->
+{% load static %}
+
+{% block morehead %}
+    <script src="{% static 'pos/javascript/edit_order.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'pos/styles/cashier-style.css' %}" />
+{% endblock %}
+
+{% block content %}
+
+{% csrf_token %}
+<p class="visually-hidden" id="user-id">{{ user.id }}</p>
+<!-- Main div container  -->
+<div class="d-flex flex-column">
+    <div class="row col-12 m-0 p-0">
+        <!-- Current order column -->
+        <div class="cashier-col bg-gray col-4 p-0 position-relative">
+            <h2 class="text-center bg-light m-0">Current Order</h2>
+            <div id="order-list">
+                <!-- Order item list header -->
+                <div class="bg-dark-gray mt-0 fs-4 order-row row text-center container p-0 w-100 m-0 fw-bold">
+                    <div class="col-1 border border-dark"></div>
+                    <div class="col-1 border border-dark">#</div>
+                    <div class="col-5 border border-dark">Name</div>
+                    <div class="col-3 border border-dark">Quantity</div>
+                    <div class="col-2 border border-dark">Price</div>
+                </div>
+                <!-- Order item template -->
+                <div id="order-item" class="visually-hidden fs-4 order-row row text-center container p-0 w-100 m-0">
+                    <div class="col-1 border border-dark">
+                        <button id="delete-btn" class="btn">
+                            <i class="fa-solid fa-xmark" style="color: red;"></i>
+                        </button>
+                    </div>
+                    <div id="item-index" class="col-1 border border-dark"></div>
+                    <div id="item-name" class="d-flex flex-column col-5 border border-dark"></div>
+                    <div id="item-quantity" class="d-flex justify-content-center col-3 border border-dark">
+                        <button id="minus-btn" class="btn">-</button>
+                        <p id="item-quantity-value" class="mx-3"></p>
+                        <button id="plus-btn" class="btn">+</button>
+                    </div>
+                    <div id="item-price" class="col-2 border border-dark"></div>
+                    <div id="item-id" class="col-2 border border-dark visually-hidden"></div>
+                </div>
+                {% for oi in order_items %}
+                    <div id="order-item" class="{% cycle 'bg-white' 'bg-offwhite' %} fs-4 order-row row text-center container p-0 w-100 m-0">
+                        <div class="col-1 border border-dark">
+                            <button id="delete-btn" class="btn" onclick = "deleteItem(this, {{ oi.item_price }})">
+                                <i class="fa-solid fa-xmark" style="color: red;"></i>
+                            </button>
+                        </div>
+                        <div id="item-index" class="col-1 border border-dark">{{ forloop.counter }}</div>
+                        <div id="item-name" class="col-5 border border-dark">{{ oi.common_name }}</div>
+                        <div id="item-quantity" class="d-flex justify-content-center col-3 border border-dark">
+                            <button id="minus-btn" class="btn" onclick = "subtractQuantity(this, {{ oi.item_price }}, 1)">-</button>
+                            <p id="item-quantity-value" class="mx-3" onclick="editQuantity(this, {{ oi.item_price }})">{{ oi.quantity }}</p>
+                            <button id="plus-btn" class="btn" onclick = "addQuantity(this, {{ oi.item_price }}, 1)">+</button>
+                        </div>
+                        <div id="item-price" class="col-2 border border-dark">{{ oi.price }}</div>
+                        <div id="item-id" class="col-2 border border-dark visually-hidden">{{ oi.id }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+            <!-- Order information -->
+            <!-- Order information -->
+            <div id="order-info" class="order-info m-0 d-flex align-items-center row">
+                <h3>Order Total: $<span id="cashier-total-price">{{ order.price }}</span></h3>
+            </div>
+        </div>
+        <!-- Category buttons column -->
+        <div id="category-list" class="cashier-col d-flex flex-column align-items-center col-2 bg-secondary p-0">
+            <h2 class="text-center">Categories</h2>
+            <button onclick="changeCategory('piadas')" class="category mb-3">
+                <div class="d-flex justify-content-center align-items-center h-100">
+                    <h3>Piadas</h3>
+                </div>
+            </button>
+            <button onclick="changeCategory('salads')" class="category mb-3">
+                <div class="d-flex justify-content-center align-items-center h-100">
+                    <h3>Salads</h3>
+                </div>
+            </button>
+            <button onclick="changeCategory('pastas')" class="category mb-3">
+                <div class="d-flex justify-content-center align-items-center h-100">
+                    <h3>Pastas</h3>
+                </div>
+            </button>
+            <button onclick="changeCategory('sides')" class="category mb-3">
+                <div class="d-flex justify-content-center align-items-center h-100">
+                    <h3>Sides</h3>
+                </div>
+            </button>
+            <button onclick="changeCategory('drinks')" class="category mb-3">
+                <div class="d-flex justify-content-center align-items-center h-100">
+                    <h3>Drinks</h3>
+                </div>
+            </button>
+            <button onclick="changeCategory('kids')" class="category mb-3">
+                <div class="d-flex justify-content-center align-items-center h-100">
+                    <h3>Kids</h3>
+                </div>
+            </button>
+            <button onclick="changeCategory('create')" class="category mb-3">
+                <div class="d-flex justify-content-center align-items-center h-100">
+                    <h3>Create</h3>
+                </div>
+            </button>
+            <button onclick="changeCategory('seasonal')" class="category mb-3">
+                <div class="d-flex justify-content-center align-items-center h-100">
+                    <h3>Seasonal</h3>
+                </div>
+            </button>
+        </div>
+        <!-- Item buttons column -->
+        <div class="cashier-col col-6 bg-gray px-auto">
+            <h2 class="text-center">Items</h2>
+            <div>
+                <div id="item-list" class="d-flex row justify-content-center">
+                    {% for i in items %}
+                        <button onclick="createOrderItem(this)" class="item d-flex justify-content-center align-items-center visually-hidden" id ="{{ i.id }}">
+                            <h3 id="name">{{ i.common_name }}</h3>
+                            <p id="price" class="visually-hidden">{{ i.price }}</p>
+                            <p id="category" class="visually-hidden">{{ i.category }}</p>
+                        </button>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer -->
+    <div class="footer bg-primary">
+        <ul class = "inline-list">
+            <li class = "inline-list">
+                <button onclick="save_order()" class="footer-btn">
+                    <div class="d-flex justify-content-center align-items-center h-100">
+                        <h3>Save</h3>
+                    </div>
+                </button>
+            </li>
+            <li class = "inline-list">
+                <button onclick="print()" class="footer-btn">
+                    <div class="d-flex justify-content-center align-items-center h-100">
+                        <h3>Print</h3>
+                    </div>
+                </button>
+            </li>
+            <li class = "inline-list">
+                <button onclick="clear_order()" class="footer-btn">
+                    <div class="d-flex justify-content-center align-items-center h-100">
+                        <h3>Clear</h3>
+                    </div>
+                </button>
+            </li class = "inline-list">
+        </ul>
+        <button class="footer-btn">
+            <div class="d-flex justify-content-center align-items-center h-100">
+                <a id = "exit" href="/"><h3>Exit</h3></a>
+            </div>
+        </button>
+    </div>
+    <div id="order-items-json" class = "visually-hidden">{{ order_items_json|safe }}</div>
+    <div id="order-id" class = "visually-hidden">{{ order.id }}</div>
+</div>
+{% endblock %}
+{% block javaScript %}
+<script>
+    function hideCartContainer() {
+        var cartContainer = document.getElementById("checkout-btn");
+        if (cartContainer.style.display !== "none") {
+            cartContainer.style.display = "none";
+        }
+    }
+    hideCartContainer();
+</script>
+{% endblock javaScript%}
+

@@ -1,0 +1,247 @@
+{% extends 'pos/base.html' %} {% block title %}Piadas | Cashier{% endblock %}
+
+<!-- load the static folder for django -->
+{% load static %} {% block morehead %}
+<link rel="stylesheet" href="{% static 'pos/styles/account-details-style.css' %}" />
+{% endblock %} {% block content %}
+<p id="user-id" class="visually-hidden">{{ user.id }}</p>
+{% csrf_token %}
+
+<div class="container-fluid d-flex justify-content-center">
+    <!-- Account Details Container -->
+    <div class="p-4 mt-3 col-8 bg-light" style="position: relative">
+        <!-- User Image and Name -->
+        <div class="d-flex flex-column align-items-center">
+            <div class="w-auto">
+                <img width="150px" height="150px" class="rounded-circle shadow-4-strong mx-auto" alt="avatar" src="../../../static/pos/images/avatar.png" />
+            </div>
+            <h1>{{ user.username }}</h1>
+        </div>
+
+        <hr />
+
+        <div class="pt-3">
+            <!-- User Details -->
+            <div id="user-details" class="row">
+                <!-- Left column -->
+                <div id="user-info" class="col-6">
+                    <div class="d-flex">
+                        <h3>Basic Information:</h3>
+                    </div>
+
+                    <div class="pt-3 d-flex align-items-center">
+                        <label for="user-email" class="col-form-label"><strong>EMAIL: </strong></label>
+                        {% if user.email %}
+                        <div id="email" class="ms-2 col-auto visually-hidden">
+                            <input id="user-email" type="text" class="form-control" />
+                        </div>
+                        <pre></pre>
+                        <span id="user-email-text">{{ user.email }}</span>
+                        <button class="edit-button ms-4 btn btn-primary" onclick="changeField(this, 'email', 'user-email-text', 'email')">Change</button>
+                        {% else %}
+                        <div class="ms-2 col-auto">
+                            <input id="user-email" type="text" class="form-control" />
+                        </div>
+                        <button class="ms-4 btn btn-primary" onclick="updateInfo('email', null)">Save</button>
+                        {% endif %}
+                    </div>
+                    <div class="pt-3 d-flex align-items-center">
+                        <p><strong>PASSWORD: </strong>********</p>
+                    </div>
+                    <div class="pt-3 d-flex align-items-center">
+                        <label for="user-card" class="col-form-label"><strong>CARD: </strong></label>
+                        {% if user.card %}
+                        <div id="card" class="ms-2 col-auto visually-hidden">
+                            <input id="user-card" type="number" class="form-control"/>
+                        </div>
+                        <pre></pre>
+                        <span id="user-card-num">{{ user.card }}</span>
+                        <button class="edit-button ms-4 btn btn-primary" onclick="changeField(this, 'card', 'user-card-num', 'card')">Change</button>
+                        {% else %}
+                        <div class="ms-2 col-auto">
+                            <input id="user-card" type="number" class="form-control"/>
+                        </div>
+                        <button class="ms-4 btn btn-primary" onclick="updateInfo('card')">Save</button>
+                        {% endif %}
+                    </div>
+                    <div class="pt-3 d-flex align-items-center">
+                        <label for="date" class="col-form-label"><strong>BIRTHDAY: </strong></label>
+                        {% if user.birthday %}
+                        <div id="date-form" class="col-auto visually-hidden">
+                            <input id="date" class="ms-2 form-control" type="date" />
+                            <span class="visually-hidden" id="date-selected"></span>
+                        </div>
+                        <pre></pre>
+                        <span id="birthday">{{ user.birthday }}</span>
+                        <button class="ms-4 btn btn-primary edit-button" onclick="changeField(this, 'date-form', 'birthday', 'birthday')">Change</button>
+                        {% else %}
+                        <div class="col-auto">
+                            <input id="date" class="ms-2 form-control" type="date" />
+                            <span class="visually-hidden" id="date-selected"></span>
+                        </div>
+                        <button class="ms-4 btn btn-primary" onclick="updateInfo('birthday')">Save</button>
+                        {% endif %}
+                    </div>
+                    <div class="pt-3 d-flex align-items-center">
+                        <label for="phone" class="col-form-label"><strong>PHONE NUMBER: </strong></label>
+                        {% if user.phone %}
+                        <div id="phone" class="ms-2 col-auto visually-hidden">
+                            <input id="phone_number" type="number" class="form-control"/>
+                        </div>
+                        <pre></pre>
+                        <span id="user-phone-num">{{ user.phone }}</span>
+                        <button id="user-phone-btn" class="edit-button ms-4 btn btn-primary" onclick="changeField(this, 'phone', 'user-phone-num', 'phone')">Change</button>
+                        {% else %}
+                        <div class="ms-2 col-auto">
+                            <input id="phone_number" type="number" class="form-control"/>
+                        </div>
+                        <button class="ms-4 btn btn-primary" onclick="updateInfo('phone')">Save</button>
+                        {% endif %}
+                    </div>
+                </div>
+                <!-- Right column -->
+                <div id="user-pref" class="col-6">
+                    <h3>Preferences:</h3>
+                    <div id="pref-store" class="pt-3 d-flex align-items-center">
+                        <p><strong>PREFERRED STORE: </strong></p>
+                        <span id="store-text">
+                            {% if user.store == 'cstat' %}
+                            <p class="ps-1" id="cstat">1025 UNIVERSITY DR. SUITE 109 COLLEGE STATION, TX 77845</p>
+                            {% elif user.store == 'dallas' %}
+                            <p class="ps-1" id="dallas">3309 DALLAS PKWY #401, PLANO, TX 75093</p>
+                            {% elif user.store == 'houston' %}
+                            <p class="ps-1" id="houston">5801 MEMORIAL DR, HOUSTON, TX 77007</p>
+                            {% else %}
+                            <p>No store selected</p>
+                            {% endif %}
+                        </span>
+                        <div class="ms-3 dropdown">
+                            <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="store-dropdown" data-bs-toggle="dropdown" aria-expanded="false"> Select Store </a>
+
+                            <ul class="dropdown-menu" aria-labelledby="store-dropdown">
+                                <li><button class="dropdown-item" onclick="changeStore('cstat')">COLLEGE STATION</button></li>
+                                <li><button class="dropdown-item" onclick="changeStore('dallas')">DALLAS</button></li>
+                                <li><button class="dropdown-item" onclick="changeStore('houston')">HOUSTON</button></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center" id="map-wrapper">
+                        <!-- Load users iFrame store -->
+                        <iframe
+                            id="store-map"
+                            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d13733.380577348591!2d-96.3395247!3d30.6242291!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x864683948b74be99%3A0xa73f7a8f8c500ffd!2sPiada%20Italian%20Street%20Food!5e0!3m2!1sen!2sus!4v1699135351535!5m2!1sen!2sus"
+                            width="80%"
+                            height="100%"
+                            style="border: 5px solid black; border-radius: 30px; margin-top: 3vh"
+                            allowfullscreen=""
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"
+                        ></iframe>
+                    </div>
+                    <!-- <div id="pref-theme" class="pt-5 pb-4 d-flex">
+                        <p><strong>THEME: </strong>Light</p>
+                        <div class="ms-3 dropdown">
+                            <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="theme-dropdown" data-bs-toggle="dropdown" aria-expanded="false"> Change Theme </a>
+
+                            <ul class="dropdown-menu" aria-labelledby="theme-dropdown">
+                                <li><button class="dropdown-item">LIGHT</button></li>
+                                <li><button class="dropdown-item">DARK</button></li>
+                                <li><button class="dropdown-item">HIGH-CONTRAST</button></li>
+                            </ul>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+            <!-- Favorite Orders -->
+            <h3>Favorite Orders:</h3>
+            <div id="pref-orders" class="p-4 bg-primary d-flex">
+                <h3 id="no-favs"></h3>
+                {% for order in orders %} {% if order.is_favorite %}
+                <div class="mt-4 mx-1 col-4 order-container bg-light">
+                    <div class="p-2 d-flex flex-column">
+                        <div class="d-flex align-items-center">
+                            <strong>ORDER {{ order.id }}: </strong>
+                            <!-- Favorite Button -->
+                            {% if order.is_favorite %}
+                            <button id="{{ order.id }}-btn" class="ms-auto btn" onclick="selectFavorite('{{ order.id }}', 'True')">
+                                <i id="{{ order.id }}-fav-icon" class="fa-solid fa-star"></i>
+                            </button>
+                            {% else %}
+                            <button id="{{ order.id }}-btn" class="ms-auto btn" onclick="selectFavorite('{{ order.id }}', 'False')">
+                                <i id="{{ order.id }}-fav-icon" class="fa-regular fa-star"></i>
+                            </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="ps-2 d-flex flex-column">
+                        <ul class="order-list">
+                            {% for c in order.order_items%}
+                                {% if forloop.counter < 4 %}
+                                    <li>{{ c.common_name }}</li>
+                                {% elif forloop.counter == 4 %}
+                                    <li>. . .</li>
+                                {% else %}
+                                    <li class="visually-hidden">{{ c.common_name }}</li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="p-2 d-flex order-price-container">
+                        <p>PRICE: {{ order.price }}</p>
+                        <button class="ms-5 btn btn-primary" onclick="cart_add_items('{{ forloop.counter }}')">Add To Cart</button>
+                    </div>
+                </div>
+                {% endif %} {% endfor %}
+            </div>
+            <!-- Order History -->
+            <div id="order-history" class="p-3 row">
+                <h3>Order History:</h3>
+                {% for order in orders %}
+                <div class="mt-4 col-4 order-history-container">
+                    <div class="p-2 d-flex flex-column">
+                        <div class="d-flex align-items-center">
+                            <strong>ORDER {{ order.id }}: </strong>
+                            <!-- Favorite Button -->
+                            {% if order.is_favorite %}
+                            <button id="{{ order.id }}-btn" class="ms-auto btn" onclick="selectFavorite('{{ order.id }}', 'True')">
+                                <i id="{{ order.id }}-fav-icon" class="fa-solid fa-star"></i>
+                            </button>
+                            {% else %}
+                            <button id="{{ order.id }}-btn" class="ms-auto btn" onclick="selectFavorite('{{ order.id }}', 'False')">
+                                <i id="{{ order.id }}-fav-icon" class="fa-regular fa-star"></i>
+                            </button>
+                            {% endif %}
+                        </div>
+                        <span>{{ order.date_time }}</span>
+                    </div>
+                    <div class="ps-2 d-flex flex-column">
+                        <ul class="order-list">
+                            {% for c in order.order_items%}
+                                {% if forloop.counter < 4 %}
+                                    <li>{{ c.common_name }}</li>
+                                {% elif forloop.counter == 4 %}
+                                    <li>. . .</li>
+                                {% else %}
+                                    <li class="visually-hidden">{{ c.common_name }}</li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="p-2 d-flex order-price-container">
+                        <p>PRICE: {{ order.price }}</p>
+                        <button class="ms-5 btn btn-primary" onclick="cart_add_items('{{ forloop.counter }}')">Add To Cart</button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <!-- Order Information -->
+            {% for order in orders %}
+            <div id="order-{{ forloop.counter }}" class="visually-hidden">{% for item in order.order_items %} {{ item.id }},{{ item.price }},{{ item.common_name }}; {% endfor %}</div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %} {% block javaScript %}
+<script src="https://kit.fontawesome.com/942d4afc19.js" crossorigin="anonymous"></script>
+<script src="{% static 'pos/javascript/account_details.js' %}"></script>
+{% endblock javaScript%}

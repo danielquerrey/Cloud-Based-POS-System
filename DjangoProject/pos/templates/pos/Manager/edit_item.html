@@ -1,0 +1,99 @@
+{% extends 'pos/base.html' %} {% block title %}Piadas | Manager View{% endblock %} {% load static %} {% block morehead %}
+<script src="{% static 'pos/javascript/create_item.js' %}"></script>
+<link rel="stylesheet" href="{% static 'pos/styles/create-item.css' %}" />
+<!-- Include jQuery for AJAX requests -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+{% endblock %} {% block content %} {% csrf_token %}
+<div id="item-cont">
+    <div class="" id="title-container">
+        <h1>Edit Item</h1>
+    </div>
+
+    <div class="" id="price-name-container">
+        <div class="">
+            <label class="" id="label" for="commonName">Common Name: </label>
+            <input type="text" id="commonName" value="{{ item.common_name }}" name="commonName" required />
+        </div>
+        <div class="">
+            <label class="" id="label" for="price">Price: </label>
+            <input type="number" id="price" name="price" min="0" step="0.01" value="{{ item.price }}" required />
+        </div>
+
+        <div class="" id="descr-box">
+            <label class="" id="label" for="description">Description: </label>
+            <textarea class="" id="description" name="description" required>{{ item.description }}</textarea>
+        </div>
+    </div>
+</div>
+
+<!-- Add additional fields as needed -->
+<div id="additional-cont">
+    <!-- Category -->
+    <div id="category-cont">
+        <div class="" id="title-container">
+            <h2>Choose Category</h2>
+        </div>
+        <div class="" id="category-options">
+            {% for c in categories %}
+            <div class="mb-2 m-1 p-1">
+                <input type="radio" id="category_{{ forloop.counter }}" name="category" value="{{ c }}" class="category-radio" {% if item.category|lower == c|lower %}checked{% endif %}>
+                <label id="" for="category_{{ forloop.counter }}">
+                    <p id="name">{{ c }}</p>
+                </label>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Ingredients -->
+    <div id="ingredients-cont">
+        <div class="" id="title-container">
+            <h2>Choose Ingredients</h2>
+        </div>
+        <div class="" id="ingr-options">
+            {% for i in ingredients %}
+            <div class="p-1 m-1">
+                <input type="checkbox" id="ingredient_{{ i.id }}" value="{{ i.id }}" class="ingredient-checkbox" {% if i.is_in %}checked{% endif %} />
+                <label for="ingredient_{{ i.id }}">
+                    <p id="name">{{ i.common_name }}</p>
+                </label>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<button type="button" id="button" onclick="addItem()">Submit</button>
+<div id="item-id" class="visually-hidden">{{ item.id }}</div>
+
+{% endblock content %} {% block javaScript %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Find all <a> elements within .navbar-nav
+        var navLinks = document.querySelectorAll(".navbar-nav .nav-link");
+
+        // Iterate over each link
+        navLinks.forEach(function (link) {
+            // Check if the text content of the link is 'About'
+            if (link.textContent.trim() === "About") {
+                // Remove the 'active' class
+                link.classList.remove("active");
+            }
+
+            // Check if the text content of the link is 'Manager'
+            if (link.textContent.trim() === "Manager") {
+                // Add the 'active' class
+                link.classList.add("active");
+            }
+        });
+    });
+</script>
+<script>
+    function hideCartContainer() {
+        var cartContainer = document.getElementById("checkout-btn");
+        if (cartContainer.style.display !== "none") {
+            cartContainer.style.display = "none";
+        }
+    }
+    hideCartContainer();
+</script>
+{% endblock javaScript%}

@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/8a87b87d-bc02-4898-8fcb-92e3f89dcdb7/resourceGroups/appsvc_linux_centralus_basic/providers/Microsoft.Web/sites/piadapos",
+    "appService.deploySubpath": "DjangoProject"
+}
