@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+        <!-- This stylesheet is bootstrap -->
+        <title>Order Online</title>
+        {% load bootstrap5 %} {% bootstrap_css %} {% bootstrap_javascript %} {% load static %}
+        <link rel="stylesheet" href="{% static 'pos/styles/order_online.css' %}" />
+        <script type="text/javascript" src="{% static 'pos/javascript/html-magnifier.js' %}"></script>
+        <script src="https://kit.fontawesome.com/942d4afc19.js" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a
+                class="navbar-brand"
+                href="{% url 'About' %}"
+                style="font-family: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif; /* font-weight: 900; */ font-style: normal; letter-spacing: 2px; text-transform: uppercase"
+            >
+                {% load static %}
+                <img class="mx-3" src="{% static '/pos/images/piada-white-logo.png' %}" class="d-inline-block align-text-top" width="40" alt="Piadas logo" />
+                Piada
+            </a>
+            <button
+                class="navbar-toggler me-3"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNavDropdown"
+                aria-controls="navbarNavDropdown"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+            >
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav container-fluid d-flex justify-content-between align-items-center ms-3 me-3">
+                    <div class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'About' %}">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'Menu Location' %}">Menu & Location</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{% url 'Order Online' %}">Order Online</a>
+                        </li>
+                        <!-- {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'Account Details' %}">Account Details</a>
+                        </li>
+                        {% endif %} -->
+                        <div class="navbar-nav">
+                            {% if user.is_authenticated %} {% if user.is_staff %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false"> Features </a>
+                                <div class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdownMenuLink">
+                                    <a class="dropdown-item" href="{% url 'Staff Home' %}">Staff</a>
+                                    {% if user.is_superuser %}
+                                    <a class="dropdown-item" href="{% url 'Manager Home' %}">Manager</a>
+         
+                                    {% endif %}
+                                </div>
+                            </li>
+                            {% endif %}
+                            <a class="nav-item nav-link" href="{% url 'Customer Home' %}">Profile</a>
+                            <a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a>
+                            {% else %}
+                            <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
+                            <a class="nav-item nav-link" href="{% url 'register' %}">Register</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <script>
+                        const magnifier = new HTMLMagnifier({ zoom: 2, shape: 'square', width: 200, height: 200 });
+
+                        function show_magnify(button) {
+                            magnifier.show();
+                            magnifier.syncScrollBars();
+                            magnifier.syncContent();
+
+                            button.onclick = function() {
+                                hide_magnify(button);
+                            };
+                        }
+
+                        function hide_magnify(button) {
+                            magnifier.hide();
+
+                            button.onclick = function() {
+                                show_magnify(button);
+                            };
+                        }
+                    </script>
+                    <div class="navbar-nav">
+                        <button class="btn d-flex align-items-center" onclick="show_magnify(this)">
+                            <p style="color: rgb(151, 151, 151);">Zoom</p>
+                            <i class="ms-1 fa-solid fa-magnifying-glass" style="color: #fff;"></i>
+                        </button>
+                    </div>
+                    {% if weather %}
+                    <div class="navbar-nav d-flex align-items-center">
+                        <figure class="nav-item image is-50x50 m-0">
+                            <img src="http://openweathermap.org/img/w/{{ weather.icon }}.png" alt="Image" />
+                        </figure>
+                        <p class="text-white nav-item temp">{{ weather.temperature }}° F</p>
+                    </div>
+                    {% endif %}
+                    <div class="navbar-nav">
+                        <div id="google_translate_element"></div>
+                    </div>
+                    <div class="navbar-nav">
+                        <!-- New nav item on the far right -->
+                        {% if user.is_authenticated %}
+                        <button type="button" class="btn btn-primary" id="checkout-btn"><i class="bi bi-cart"></i>View {{ user.username }}'s Cart</button>
+                        {% else %}
+                        <button type="button" class="btn btn-primary" id="checkout-btn"><i class="bi bi-cart"></i>View Guest Cart</button>
+                        {% endif %}
+                    </div>
+                </ul>
+            </div>
+        </nav>
+        <!-- Desktop Elements -->
+        <div class="" id="page-container">
+            <div class="" id="cart-container">
+                <div id="title-container">
+
+                    {% if user.is_authenticated %}
+                    <h2>{{user.username}}'s Cart</h2>
+                    {% else %}
+                    <h2>Guest Cart</h2>
+                    {%endif%}
+                </div>
+                <div id="order-container">
+                    <!-- <div  class="order-item" id="">
+                        <div id="item-text">
+                            <h1>title</h1>
+                            <h6></h6>
+                        </div>
+                        <div id="item-details">
+                            <div id="item-buttons">
+                                <button>-</button>
+                                <h3>stock#</h3>
+                                <button>+</button>
+                            </div>
+                            <div id="item-price">
+                                <h3>$00.00</h3>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
+                <div id="checkOut-container">
+                    <a class="btn btn-primary" onclick="clear_cartButton()" id="clear-checkout-btn">Clear Cart</a>
+                    <!-- <a href="{% url 'Check Out Order' %}" onclick="check_emptyCart(event)" class="btn btn-primary" id="checkout-btn">Check Out</a> -->
+                    <a href="{% url 'Check Out Order' %}" onclick="" class="btn btn-primary" id="checkout-btn">Check Out</a>
+
+                    <h2 id="total-price">$00.00</h2>
+                </div>
+            </div>
+            <div class="" id="content-container">
+                <div class="" id="content-store" onclick="default_item_active()">
+                    <div id="dropdown-container">
+                        {% if user.is_authenticated %}
+                        <h1 id="myStore-header">{{user.username}}'s Selected Location</h1>
+                        {% else %}
+                        <h1 id="myStore-header">Selected Location</h1>
+                        {% endif %}
+
+                        <select id="store-dropdown">
+                            <option value="Dallas">Dallas</option>
+                            <option value="Houston">Houston</option>
+                            <option value="College Station">College Station</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="" id="content-menu">
+                    <div id="menu-bar">
+                        <span>
+                            <button class="menu-btn" id="btn-piadas" onclick="category_active.call(this)" onfocus="" onblur="">piadas</button>
+                            <button class="menu-btn" id="btn-salads" onclick="category_active.call(this)" onfocus="" onblur="">salads</button>
+                            <button class="menu-btn" id="btn-pastas" onclick="category_active.call(this)" onfocus="" onblur="">pastas</button>
+                            <button class="menu-btn" id="btn-sides" onclick="category_active.call(this)" onfocus="" onblur="">sides</button>
+                            <button class="menu-btn" id="btn-drinks" onclick="category_active.call(this)" onfocus="" onblur="">drinks</button>
+                            <button class="menu-btn" id="btn-kids" onclick="category_active.call(this)" onfocus="" onblur="">kids</button>
+                            <button class="menu-btn" id="btn-Create Your Own" onclick="category_active.call(this)" onfocus="" onblur="">Create Your Own</button>
+                            <button class="menu-btn" id="btn-Season" onclick="category_active.call(this)" onfocus="" onblur="">Season</button>
+                        </span>
+                    </div>
+                    <div id="display-items">
+                        <div id="default-item">
+                            <h1>Select a category!</h1>
+                        </div>
+                        <div class="item" id="piadas-items" style="display: none">
+                            {% for i in items %} {% if i.category == 'piadas' %}
+                            <div class="" id="menu-item-wrapper">
+                                <div id="item-id" style="display: none">{{ i.id }}</div>
+                                <h5 class="">{{ i.common_name }}</h5>
+                                <p class="">${{ i.price }}</p>
+                                <!-- <a id="{{ i.id }}" class="btn btn-primary add-item-btn" onclick="LS_remove_item('{{ i.id }}','{{ i.price }}')">Remove from Cart</a> -->
+                                <a id="{{ i.id }}" class="btn btn-primary add-item-btn" onclick="LS_add_item('{{ i.id }}','{{ i.price }}', '{{i.description}}', '{{i.common_name}}')">Add to Cart</a>
+                                <p id="item-description" style="display: none">{{ i.description }}</p>
+                            </div>
+                            {% endif %} {% endfor %}
+                        </div>
+                        <div class="item" id="salads-items" style="display: none">
+                            {% for i in items %} {% if i.category == 'salads' %}
+                            <div class="" id="menu-item-wrapper">
+                                <div id="item-id" style="display: none">{{ i.id }}</div>
+                                <h5 class="">{{ i.common_name }}</h5>
+                                <p class="">${{ i.price }}</p>
+                                <!-- <a id="{{ i.id }}" class="btn btn-primary add-item-btn" onclick="LS_remove_item('{{ i.id }}','{{ i.price }}')">Remove from Cart</a> -->
+                                <a id="{{ i.id }}" class="btn btn-primary add-item-btn" onclick="LS_add_item('{{ i.id }}','{{ i.price }}', '{{i.description}}', '{{i.common_name}}')">Add to Cart</a>
+                                <p id="item-description" style="display: none">{{ i.description }}</p>
+                            </div>
+                            {% endif %} {% endfor %}
+                        </div>
+                        <div class="item" id="pastas-items" style="display: none">
+                            {% for i in items %} {% if i.category == 'pastas' %}
+                            <div class="" id="menu-item-wrapper">
+                                <div id="item-id" style="display: none">{{ i.id }}</div>
+                                <h5 class="">{{ i.common_name }}</h5>
+                                <p class="">${{ i.price }}</p>
+                                <!-- <a id="{{ i.id }}" class="btn btn-primary add-item-btn" onclick="LS_remove_item('{{ i.id }}','{{ i.price }}')">Remove from Cart</a> -->
+                                <a id="{{ i.id }}" class="btn btn-primary add-item-btn" onclick="LS_add_item('{{ i.id }}','{{ i.price }}', '{{i.description}}', '{{i.common_name}}')">Add to Cart</a>
+                                <p id="item-description" style="display: none">{{ i.description }}</p>
+                            </div>
+                            {% endif %} {% endfor %}
+                        </div>
+                        <div class="item" id="sides-items" style="display: none">
+                            {% for i in items %} {% if i.category == 'sides' %}
+                            <div class="" id="menu-item-wrapper">
+                                <div id="item-id" style="display: none">{{ i.id }}</div>
+                                <h5 class="">{{ i.common_name }}</h5>
+                                <p class="">${{ i.price }}</p>
+                                <!-- <a id="{{ i.id }}" class="btn btn-primary add-item-btn" onclick="LS_remove_item('{{ i.id }}','{{ i.price }}')">Remove from Cart</a> -->
+                                <a id="{{ i.id }}" class="btn btn-primary add-item-btn" onclick="LS_add_item('{{ i.id }}','{{ i.price }}', '{{i.description}}', '{{i.common_name}}')">Add to Cart</a>
+                                <p id="item-description" style="display: none">{{ i.description }}</p>
+                            </div>
+                            {% endif %} {% endfor %}
+                        </div>
+                        <div class="item" id="drinks-items" style="display: none">
+                            {% for i in items %} {% if i.category == 'drinks' %}
+                            <div class="" id="menu-item-wrapper">
+                                <div id="item-id" style="display: none">{{ i.id }}</div>
+                                <h5 class="">{{ i.common_name }}</h5>
+                                <p class="">${{ i.price }}</p>
+                                <!-- <a id="{{ i.id }}" class="btn btn-primary add-item-btn" onclick="LS_remove_item('{{ i.id }}','{{ i.price }}')">Remove from Cart</a> -->
+                                <a id="{{ i.id }}" class="btn btn-primary add-item-btn" onclick="LS_add_item('{{ i.id }}','{{ i.price }}', '{{i.description}}', '{{i.common_name}}')">Add to Cart</a>
+                                <p id="item-description" style="display: none">{{ i.description }}</p>
+                            </div>
+                            {% endif %} {% endfor %}
+                        </div>
+                        <div class="item" id="kids-items" style="display: none">
+                            {% for i in items %} {% if i.category == 'kids' %}
+                            <div class="" id="menu-item-wrapper">
+                                <div id="item-id" style="display: none">{{ i.id }}</div>
+                                <h5 class="">{{ i.common_name }}</h5>
+                                <p class="">${{ i.price }}</p>
+                                <!-- <a id="{{ i.id }}" class="btn btn-primary add-item-btn" onclick="LS_remove_item('{{ i.id }}','{{ i.price }}')">Remove from Cart</a> -->
+                                <a id="{{ i.id }}" class="btn btn-primary add-item-btn" onclick="LS_add_item('{{ i.id }}','{{ i.price }}', '{{i.description}}', '{{i.common_name}}')">Add to Cart</a>
+                                <p id="item-description" style="display: none">{{ i.description }}</p>
+                            </div>
+                            {% endif %} {% endfor %}
+                        </div>
+                        <div class="item" id="Create Your Own-items" style="display: none">
+                            {% for i in items %} {% if i.category == 'create' %}
+                            <div class="" id="menu-item-wrapper">
+                                <div id="item-id" style="display: none">{{ i.id }}</div>
+                                <h5 class="">{{ i.common_name }}</h5>
+                                <p class="">${{ i.price }}</p>
+                                <!-- <a id="{{ i.id }}" class="btn btn-primary add-item-btn" onclick="LS_remove_item('{{ i.id }}','{{ i.price }}')">Remove from Cart</a> -->
+                                <a id="{{ i.id }}" class="btn btn-primary add-item-btn" onclick="LS_add_item('{{ i.id }}','{{ i.price }}', '{{i.description}}', '{{i.common_name}}')">Add to Cart</a>
+                                <p id="item-description" style="display: none">{{ i.description }}</p>
+                            </div>
+                            {% endif %} {% endfor %}
+                        </div>
+                        <div class="item" id="Season-items" style="display: none">
+                            {% for i in items %} {% if i.category == 'seasonal' %}
+                            <div class="" id="menu-item-wrapper">
+                                <div id="item-id" style="display: none">{{ i.id }}</div>
+                                <h5 class="">{{ i.common_name }}</h5>
+                                <p class="">${{ i.price }}</p>
+                                <!-- <a id="{{ i.id }}" class="btn btn-primary add-item-btn" onclick="LS_remove_item('{{ i.id }}','{{ i.price }}')">Remove from Cart</a> -->
+                                <a id="{{ i.id }}" class="btn btn-primary add-item-btn" onclick="LS_add_item('{{ i.id }}','{{ i.price }}', '{{i.description}}', '{{i.common_name}}')">Add to Cart</a>
+                                <p id="item-description" style="display: none">{{ i.description }}</p>
+                            </div>
+                            {% endif %} {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Google Translate Stuff -->
+        <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+        <script type="text/javascript">
+            function googleTranslateElementInit() {
+                new google.translate.TranslateElement({ pageLanguage: "en" }, "google_translate_element");
+            }
+        </script>
+        <!-- End Google Translate Stuff -->
+        <script src="{% static 'pos/javascript/order_online.js' %}"></script>
+        <script src="{% static 'pos/javascript/local_storage.js' %}"></script>
+
+        <!-- Mobile Elements -->
+    </body>
+</html>

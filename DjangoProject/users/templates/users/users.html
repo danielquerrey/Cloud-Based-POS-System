@@ -1,0 +1,62 @@
+{% extends 'pos/base.html' %}
+{% block title %}Piadas | User Management{% endblock %}
+
+<!-- load the static folder for django -->
+{% load static %}
+
+{% block morehead %}
+    <link rel="stylesheet" href="{% static 'pos/styles/manager_home-style.css' %}" />
+    <script src="{% static 'pos/javascript/users.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+
+{% csrf_token %}
+<p class="visually-hidden" id="user-id">{{ user.id }}</p>
+<div class="row col-12 p-0 m-0">
+    <div id="order-list" class = "p-0 m-0">
+        <!-- Order item list header -->
+        <div class="bg-dark-gray mt-0 fs-4 order-row row text-center p-0 m-0 fw-bold">
+            <div class="col-2 border border-dark">#</div>
+            <div class="col-3 border border-dark">Username</div>
+            <div class="col-3 border border-dark">Email</div>
+            <div class="col-2 border border-dark">Position</div>
+            <div class="col-1 border border-dark"></div>
+            <div class="col-1 border border-dark"></div>
+        </div>
+        <div>
+            {% for u in users %}
+                <div class="bg-light mt-0 fs-4 order-row row text-center p-0 m-0 fw-bold">
+                    <div class="col-2 border border-dark">#{{  u.id  }}</div>
+                    <div class="col-3 border border-dark">{{  u.username  }}</div>
+                    <div class="col-3 border border-dark">{{  u.email  }}</div>
+                    {% if u.is_superuser %}
+                        <div class="col-2 border border-dark">Admin</div>
+                    {% elif u.is_manager %}
+                        <div class="col-2 border border-dark">Manager</div>
+                    {% elif u.is_staff %}
+                        <div class="col-2 border border-dark">Staff</div>
+                    {% else %}
+                        <div class="col-2 border border-dark">Customer</div>
+                    {% endif %}
+                    <button class="col-1 border border-dark" onclick="edit_user()" data-user-id="{{ u.id }}">Edit</button>
+                    <button class="col-1 border border-dark" onclick="delete_user()" data-user-id="{{ u.id }}">Delete</button>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+            
+{% endblock %}
+{% block javaScript %}
+<script>
+    function hideCartContainer() {
+        var cartContainer = document.getElementById("checkout-btn");
+        if (cartContainer.style.display !== "none") {
+            cartContainer.style.display = "none";
+        }
+    }
+    hideCartContainer();
+</script>
+{% endblock javaScript%}
+

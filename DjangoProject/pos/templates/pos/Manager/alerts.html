@@ -1,0 +1,95 @@
+{% extends 'pos/base.html' %}
+{% block title %}Piadas | Manager View{% endblock %}
+{% load static %}
+
+{% block morehead %}
+    <script src="{% static 'pos/javascript/alerts.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'pos/styles/menu_loc.css' %}" />
+    <!-- Include jQuery for AJAX requests -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+{% endblock %}
+
+{% block content %}
+
+{% csrf_token %}
+<div id="alerts-cont">
+    <div class="" id="content-container">
+        <div class="" id="content-menu-alerts">
+            <div id="menu-bar">
+                <button class="menu-btn" id="btn-restock" onfocus="inFocus.call(this)">restock</button>
+                <button class="menu-btn" id="btn-excess" onfocus="inFocus.call(this)">excess</button>
+                <button class="menu-btn" id="btn-sells-together" onfocus="inFocus.call(this)">sells_together</button>
+            </div>
+            <div id="display-items" >
+                <div class="item" id="restock-report" style="">
+                    {% for i in restock_report %}
+                        <div class="" id="menu-item-wrapper-alerts">
+                            <h5 class="">{{ i.common_name }}</h5>
+                            <p class="">Low on stock: {{ i.stock }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="item" id="excess-report" style="display: none;">
+                    <div id="menu-bar" style="width: 25vw;">
+                        <button class="menu-btn" onclick="time_update()">SUBMIT</button>
+                        <input id = "start-date"type="date"></input>
+                        <input id = "end-date" type="date"></input>
+                    </div>
+                    
+                    {% for i in excess_report %}
+                        <div class="" id="menu-item-wrapper-alerts">
+                            <h5 class="">{{ i.common_name }}</h5>
+                            <p class="">Only sold {{ i.amount_sold }} out of {{ i.total_inventory }} stock</p>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="item" id="sells_together-report" style="display: none;">
+                    {% for pair in common_pairs %} 
+                    <div class="" id="menu-item-wrapper-alerts">
+                        <h5>{{ pair }}</h5>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock content %}
+{% block javaScript %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Find all <a> elements within .navbar-nav
+        var navLinks = document.querySelectorAll(".navbar-nav .nav-link");
+
+        // Iterate over each link
+        navLinks.forEach(function (link) {
+            // Check if the text content of the link is 'About'
+            if (link.textContent.trim() === "About") {
+                // Remove the 'active' class
+                link.classList.remove("active");
+            }
+
+            // Check if the text content of the link is 'Manager'
+            if (link.textContent.trim() === "Manager") {
+                // Add the 'active' class
+                link.classList.add("active");
+            }
+        });
+    });
+</script>
+<script>
+    function hideCartContainer() {
+        var cartContainer = document.getElementById("checkout-btn");
+        if (cartContainer.style.display !== "none") {
+            cartContainer.style.display = "none";
+        }
+    }
+    hideCartContainer();
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        document.getElementById('btn-restock').focus(this);
+    });
+</script>
+{% endblock javaScript%}

@@ -1,0 +1,85 @@
+{% extends 'pos/base.html' %}
+{% block title %}Piadas | Manager{% endblock %}
+
+{% load static %}
+
+{% block morehead %}
+    <link rel="stylesheet" href="{% static 'pos/styles/landing.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="col-12 p-0 m-0" id="">
+    <!-- 
+        Menu & Current Store
+        
+        Create Order
+        Order History
+        Account Details
+            - personal info
+            - recent orders
+            - favorite orders
+        -->
+    <div class="" id="landing-welcome">
+        <div class="" id="h1-wrapper">
+            <h1><strong>Manager {{ user.username }}!</strong></h1>
+        </div>
+    </div>
+
+    <div class="" id="landing-mid">
+        <div class="col-8" id="button-wrapper">
+            <a href="{% url 'alerts' %}">
+                <button  class="mid-btn" id="menu-btn">Alerts</button>
+            </a>
+            <a href="{% url 'create_item' %}">
+                <button class="mid-btn" id="menu-btn">Create Item</button>
+            </a>
+            
+            <a href="{% url 'ingredients' %}">
+                <button class="mid-btn" id="menu-btn">Ingredients</button>
+            </a>
+        <!-- </div> -->
+        <!-- <div class="" id="button-wrapper"> -->
+            
+            
+            <a href="{% url 'update items' %}">
+                <button class="mid-btn" id="menu-btn">Update Items</button>
+            </a>
+            <a href="{% url 'Sales Analysis' %}">
+                <button class="mid-btn" id="store-btn">Sales Analysis</button>
+            </a>
+            <a href="{% url 'Order History' %}">
+                <button class="mid-btn" id="menu-btn">Order History and Editing</button>
+            </a>
+        </div>
+        <div class="col-4 m-0 p-0" id="map-container">
+            <div id="current-store">
+                <h1 id="my-store-h1"><strong>MY STORE</strong></h1>
+            </div>
+            <div class="p-0 m-0" id="map-wrapper">
+                <!-- Load users iFrame store -->
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d13733.380577348591!2d-96.3395247!3d30.6242291!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x864683948b74be99%3A0xa73f7a8f8c500ffd!2sPiada%20Italian%20Street%20Food!5e0!3m2!1sen!2sus!4v1699135351535!5m2!1sen!2sus"
+                    width="90%"
+                    height="90%"
+                    style="border: 5px solid black; border-radius: 30px; margin-top: 3vh"
+                    allowfullscreen=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                ></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block javaScript %}
+<script>
+    function hideCartContainer() {
+        var cartContainer = document.getElementById("checkout-btn");
+        if (cartContainer.style.display !== "none") {
+            cartContainer.style.display = "none";
+        }
+    }
+    hideCartContainer();
+</script>
+{% endblock javaScript%}

@@ -1,0 +1,40 @@
+{% extends 'pos/base.html' %}
+{% block title %}Piadas | Kitchen{% endblock %}
+
+{% load static %}
+
+{% block morehead %}
+    <link rel="stylesheet" href="{% static 'pos/styles/order_online.css' %}" />
+    <script src="{% static 'pos/javascript/kitchen.js' %}"></script>
+    <style>
+        /* Define your color classes */
+        .grey { background-color: grey; }
+        .blue { background-color: blue; }
+        .green { background-color: green; }
+        .yellow { background-color: yellow; }
+        .orange { background-color: orange; }
+        .red { background-color: red; }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="" id="content-container">
+    <div class="" id="content-menu">
+        <div id="display-items" >
+            <div class="item" id = "kitchen-area">
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javaScript %}
+<script>
+    function hideCartContainer() {
+        var cartContainer = document.getElementById("checkout-btn");
+        if (cartContainer.style.display !== "none") {
+            cartContainer.style.display = "none";
+        }
+    }
+    hideCartContainer();
+</script>
+{% endblock javaScript%}

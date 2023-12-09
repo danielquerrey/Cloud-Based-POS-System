@@ -1,0 +1,92 @@
+{% extends 'pos/base.html' %}
+{% block title %}Piadas | Edit User{% endblock %}
+
+<!-- load the static folder for django -->
+{% load static %}
+
+{% block morehead %}
+    <link rel="stylesheet" href="{% static 'pos/styles/manager_home-style.css' %}" />
+    <script src="{% static 'pos/javascript/edit_user.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+
+{% csrf_token %}
+<p class="visually-hidden" id="user-id">{{ user.id }}</p>
+<div class="row col-12 p-0 m-0">
+    <div id="order-list" class = "p-0 m-0">
+        <!-- Order item list header -->
+        <div class="bg-dark-gray mt-0 fs-4 order-row row text-center p-0 m-0 fw-bold">
+            <div class="col-1 border border-dark">#</div>
+            <div class="col-3 border border-dark">Username</div>
+            <div class="col-3 border border-dark">Email</div>
+            <div class="col-3 border border-dark">Role</div>
+            <div class="col-1 border border-dark"></div>
+            <div class="col-1 border border-dark"></div>
+        </div>
+        <div class="bg-light mt-0 fs-4 order-row row text-center p-0 m-0 fw-bold">
+            <div class="col-1 border border-dark">#{{ edit_user.id }}</div>
+            <div class="col-3 border border-dark">
+                <input type="text" id="username" value="{{ edit_user.username }}">
+            </div>
+            <div class="col-3 border border-dark">
+                <input type="email" id="email" value="{{ edit_user.email }}">
+            </div>
+            <div class="col-3 border border-dark">
+                <select id="userRole">
+                    <option value="customer" {% if not edit_user.is_superuser and not edit_user.is_manager and not edit_user.is_staff %}selected{% endif %}>Customer</option>
+                    <option value="staff" {% if edit_user.is_staff %}selected{% endif %}>Staff</option>
+                    <option value="manager" {% if edit_user.is_manager %}selected{% endif %}>Manager</option>
+                    <option value="admin" {% if edit_user.is_superuser %}selected{% endif %}>Admin</option>
+                </select>
+            </div>
+            <button class="col-1 border border-dark" onclick="submit_edit()" data-user-id="{{ edit_user.id }}">Submit</button>
+            <button class="col-1 border border-dark" onclick="delete_user()" data-user-id="{{ edit_user.id }}">Delete</button>
+        </div>
+        
+        <div class="bg-dark-gray mt-0 fs-4 order-row row text-center p-0 m-0 fw-bold">
+            <div class="col-1 border border-dark">#</div>
+            <div class="col-2 border border-dark">First Name</div>
+            <div class="col-2 border border-dark">Last Name</div>
+            <div class="col-2 border border-dark">Birthday</div>
+            <div class="col-2 border border-dark">Phone</div>
+            <div class="col-3 border border-dark">Store</div>
+        </div>
+        <div class="bg-light mt-0 fs-4 order-row row text-center p-0 m-0 fw-bold">
+            <div class="col-1 border border-dark">#{{ edit_user.id }}</div>
+            <div class="col-2 border border-dark">
+                <input type="text" id="firstname" value="{{ edit_user.firstname }}">
+            </div>
+            <div class="col-2 border border-dark">
+                <input type="text" id="lastname" value="{{ edit_user.lastname }}">
+            </div>
+            <div class="col-2 border border-dark">
+                <input type="date" id="birthday" value="{{ bday }}">
+            </div>
+            <div class="col-2 border border-dark">
+                <input type="text" id="phone" value="{{ edit_user.phone }}">
+            </div>
+            <div class="col-3 border border-dark">
+                <select id="store">
+                    <option value="dallas" {% if edit_user.store == 'dallas' %}selected{% endif %}>Dallas</option>
+                    <option value="cstat" {% if edit_user.store == 'cstat' %}selected{% endif %}>College Station</option>
+                    <option value="houston" {% if edit_user.store == 'houston' %}selected{% endif %}>Houston</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+            
+{% endblock %}
+{% block javaScript %}
+<script>
+    function hideCartContainer() {
+        var cartContainer = document.getElementById("checkout-btn");
+        if (cartContainer.style.display !== "none") {
+            cartContainer.style.display = "none";
+        }
+    }
+    hideCartContainer();
+</script>
+{% endblock javaScript%}
+

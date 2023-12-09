@@ -1,0 +1,134 @@
+html,
+body {
+    min-height: 100% !important;
+    height: 100% !important;
+
+    
+}
+
+
+        /* Background image in body element */
+/* body {
+    background-image: url("../images/piada-store-background.jpg");
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center center;
+    width: 100vw;
+    height: 100vh;
+} */
+
+    /* Piada Style banner */
+/*
+.main-header {
+    color: #000;
+    background-color: gray;
+    padding: 10px;
+    height: 150px;
+    text-align: center;
+    background-image: url(/static/pos/images/header-bg.jpg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+*/
+
+.cashier-col {
+    height: 90vh;
+}
+
+.order-row {
+    width: 100%;
+    user-select: none;
+}
+
+.order-row div {
+    text-align: center;
+    padding: 0px;
+}
+
+.category {
+    width: 80%;
+    height: 85px;
+}
+
+.item {
+    text-align: center;
+    min-width: 100px;
+    max-width: 25%;
+    min-height: 100px;
+    max-height: auto;
+}
+
+.category,
+.item {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin: 5px;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.category:hover,
+.item:hover {
+    background-color: #f1f1f1;
+    transition: all 0.2s ease-in-out;
+    transform: scale(1.05);
+}
+
+.order-info {
+    bottom: 0;
+    position: absolute;
+    width: 100%;
+    height: 85px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 5px;
+}
+
+#order-list {
+    height: 80%;
+    overflow-y: auto;
+}
+
+#order-list > :not(:first-child):hover {
+    cursor: pointer;
+}
+
+.bg-gray {
+    background-color: #afafaf;
+}
+
+.bg-dark-gray {
+    background-color: #868686;
+}
+
+.bg-offwhite {
+    background-color: #e0e0e0;
+}
+
+.footer {
+    height: 10vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.footer-btn {
+    height: 7vh;
+    width: 18vh;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+}
+#exit {
+    color: black;
+    text-decoration: none;
+}
+.inline-list {
+    display: inline-block;
+    padding: 0px 10px;
+    text-decoration: none;
+    list-style: none;
+    margin: 0;
+}

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+        <!-- This stylesheet is bootstrap -->
+        <title>Order Online</title>
+        {% load bootstrap5 %} {% bootstrap_css %} {% bootstrap_javascript %} {% load static %}
+        <link rel="stylesheet" href="{% static 'pos/styles/checkout_order.css' %}" />
+        <link rel="stylesheet" href="{% static 'pos/styles/account-details-style.css' %}" />
+        <script type="text/javascript" src="{% static 'pos/javascript/html-magnifier.js' %}"></script>
+        <script src="https://kit.fontawesome.com/942d4afc19.js" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a
+                class="navbar-brand"
+                href="{% url 'About' %}"
+                style="font-family: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif; /* font-weight: 900; */ font-style: normal; letter-spacing: 2px; text-transform: uppercase"
+            >
+                {% load static %}
+                <img class="mx-3" src="{% static '/pos/images/piada-white-logo.png' %}" class="d-inline-block align-text-top" width="40" alt="Piadas logo" />
+                Piada
+            </a>
+            <button
+                class="navbar-toggler me-3"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNavDropdown"
+                aria-controls="navbarNavDropdown"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+            >
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav container-fluid d-flex justify-content-between align-items-center ms-3 me-3">
+                    <div class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'About' %}">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'Menu Location' %}">Menu & Location</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{% url 'Order Online' %}">Order Online</a>
+                        </li>
+                        <!-- {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'Account Details' %}">Account Details</a>
+                        </li>
+                        {% endif %} -->
+                        <div class="navbar-nav">
+                            {% if user.is_authenticated %} {% if user.is_staff %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false"> Features </a>
+                                <div class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdownMenuLink">
+                                    <a class="dropdown-item" href="{% url 'Staff Home' %}">Staff</a>
+                                    {% if user.is_superuser %}
+                                    <a class="dropdown-item" href="{% url 'Manager Home' %}">Manager</a>
+
+                                    {% endif %}
+                                </div>
+                            </li>
+                            {% endif %}
+                            <a class="nav-item nav-link" href="{% url 'Customer Home' %}">Profile</a>
+                            <a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a>
+                            {% else %}
+                            <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
+                            <a class="nav-item nav-link" href="{% url 'register' %}">Register</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <script>
+                        const magnifier = new HTMLMagnifier({ zoom: 2, shape: "square", width: 200, height: 200 });
+
+                        function show_magnify(button) {
+                            magnifier.show();
+                            magnifier.syncScrollBars();
+                            magnifier.syncContent();
+
+                            button.onclick = function () {
+                                hide_magnify(button);
+                            };
+                        }
+
+                        function hide_magnify(button) {
+                            magnifier.hide();
+
+                            button.onclick = function () {
+                                show_magnify(button);
+                            };
+                        }
+                    </script>
+                    <div class="navbar-nav">
+                        <button class="btn d-flex align-items-center" onclick="show_magnify(this)">
+                            <p style="color: rgb(151, 151, 151)">Zoom</p>
+                            <i class="ms-1 fa-solid fa-magnifying-glass" style="color: #fff"></i>
+                        </button>
+                    </div>
+                    {% if weather %}
+                    <div class="navbar-nav d-flex align-items-center">
+                        <figure class="nav-item image is-50x50 m-0">
+                            <img src="http://openweathermap.org/img/w/{{ weather.icon }}.png" alt="Image" />
+                        </figure>
+                        <p class="text-white nav-item temp">{{ weather.temperature }}° F</p>
+                    </div>
+                    {% endif %}
+                    <div class="navbar-nav">
+                        <div id="google_translate_element"></div>
+                    </div>
+                    <div class="navbar-nav">
+                        <!-- New nav item on the far right -->
+                        {% if user.is_authenticated %}
+                        <button type="button" class="btn btn-primary" id="checkout-btn"><i class="bi bi-cart"></i>View {{ user.username }}'s Cart</button>
+                        {% else %}
+                        <button type="button" class="btn btn-primary" id="checkout-btn"><i class="bi bi-cart"></i>View Guest Cart</button>
+                        {% endif %} {% if not is_main_page %}
+                        <a href="{% url 'Order Online' %}" id="prev-button">
+                            <button type="button" class="btn btn-primary" style="margin-left: 1vw"><i class="bi bi-cart"></i> Previous Page</button>
+                        </a>
+                        {% endif %}
+                    </div>
+                </ul>
+            </div>
+        </nav>
+        <!-- this is for account details buttons -->
+        <p id="user-id" class="visually-hidden">{{ user.id }}</p>
+        <!--  -->
+
+        <!-- Desktop Elements -->
+        <div class="" id="page-container">
+            <div class="" id="content-container">
+                <div id="checkout-order">
+                    <div id="checkout-title">
+                        {% if user.is_authenticated %}
+                        <h1 id="user-title">{{user.username}}'s Checkout</h1>
+                        <!-- <h1 id="total-items"># Item</h1> -->
+                        {% else %}
+                        <h1 id="user-title">My Checkout</h1>
+                        <!-- <h1 id="total-items"># Item</h1> -->
+                        {% endif %}
+                    </div>
+                    <div id="checkout-body">
+                        <div id="payment-details">
+                            <div id="selected-store">
+                                <div id="preferences-title">
+                                    <h3>Your Store:</h3>
+                                    <div class="ms-3 dropdown">
+                                        <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="store-dropdown" data-bs-toggle="dropdown" aria-expanded="false"> Select Store </a>
+
+                                        <ul class="dropdown-menu" aria-labelledby="store-dropdown">
+                                            <li><button class="dropdown-item" onclick="changeStore('cstat')">COLLEGE STATION</button></li>
+                                            <li><button class="dropdown-item" onclick="changeStore('dallas')">DALLAS</button></li>
+                                            <li><button class="dropdown-item" onclick="changeStore('houston')">HOUSTON</button></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div id="pref-store" class="d-flex align-items-center">
+                                    <p><strong>PREFERRED STORE: </strong></p>
+                                    <span id="store-text">
+                                        {% if user.store == 'cstat' %}
+                                        <p class="ps-1" id="cstat">1025 UNIVERSITY DR. SUITE 109 COLLEGE STATION, TX 77845</p>
+                                        {% elif user.store == 'dallas' %}
+                                        <p class="ps-1" id="dallas">3309 DALLAS PKWY #401, PLANO, TX 75093</p>
+                                        {% elif user.store == 'houston' %}
+                                        <p class="ps-1" id="houston">5801 MEMORIAL DR, HOUSTON, TX 77007</p>
+                                        {% else %}
+                                        <p>No store selected</p>
+                                        {% endif %}
+                                    </span>
+                                </div>
+
+                                <div class="d-flex justify-content-center" id="map-wrapper">
+                                    <!-- Load users iFrame store -->
+                                    <iframe
+                                        id="store-map"
+                                        src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d13733.380577348591!2d-96.3395247!3d30.6242291!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x864683948b74be99%3A0xa73f7a8f8c500ffd!2sPiada%20Italian%20Street%20Food!5e0!3m2!1sen!2sus!4v1699135351535!5m2!1sen!2sus"
+                                        width="80%"
+                                        height="100%"
+                                        style="border: 5px solid black; border-radius: 30px"
+                                        allowfullscreen=""
+                                        loading="lazy"
+                                        referrerpolicy="no-referrer-when-downgrade"
+                                    ></iframe>
+                                </div>
+                            </div>
+                            <div id="user-info" class="">
+                                <h3>Order Information:</h3>
+
+                                <div class="pt-3 d-flex align-items-center">
+                                    <label for="user-email" class="col-form-label"><strong>EMAIL: </strong></label>
+                                    {% if user.email %}
+                                    <div id="email" class="ms-2 col-auto visually-hidden">
+                                        <input id="user-email" type="text" class="form-control"/>
+                                    </div>
+                                    <pre></pre>
+                                    <span id="user-email-text">{{ user.email }}</span>
+                                    <button class="edit-button ms-4 btn btn-primary" onclick="changeField(this, 'email', 'user-email-text', 'email')">Change</button>
+                                    {% else %}
+                                    <div class="ms-2 col-auto">
+                                        <input id="user-email" type="text" class="form-control" />
+                                    </div>
+                                    <button class="ms-4 btn btn-primary" onclick="updateInfo('email', null)">Save</button>
+                                    {% endif %}
+                                </div>
+                                <div class="pt-3 d-flex align-items-center">
+                                    <label for="user-card" class="col-form-label"><strong>CARD: </strong></label>
+                                    {% if user.card %}
+                                    <div id="card" class="ms-2 col-auto visually-hidden">
+                                        <input id="user-card" type="text" class="form-control" />
+                                    </div>
+                                    <pre></pre>
+                                    <span id="user-card-num">{{ user.card }}</span>
+                                    <button class="edit-button ms-4 btn btn-primary" onclick="changeField(this, 'card', 'user-card-num', 'card')">Change</button>
+                                    {% else %}
+                                    <div class="ms-2 col-auto">
+                                        <input id="user-card" type="text" class="form-control" />
+                                    </div>
+                                    <button class="ms-4 btn btn-primary" onclick="updateInfo('card')">Save</button>
+                                    {% endif %}
+                                </div>
+
+                                <div class="pt-3 d-flex align-items-center">
+                                    <label for="phone" class="col-form-label"><strong>PHONE NUMBER: </strong></label>
+                                    {% if user.phone %}
+                                    <div id="phone" class="ms-2 col-auto visually-hidden">
+                                        <input id="phone_number" type="text" class="form-control" />
+                                    </div>
+                                    <pre></pre>
+                                    <span id="user-phone-num">{{ user.phone }}</span>
+                                    <button id="user-phone-btn" class="edit-button ms-4 btn btn-primary" onclick="changeField(this, 'phone', 'user-phone-num', 'phone')">Change</button>
+                                    {% else %}
+                                    <div class="ms-2 col-auto">
+                                        <input id="phone_number" type="text" class="form-control" />
+                                    </div>
+                                    <button class="ms-4 btn btn-primary" onclick="updateInfo('phone')">Save</button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div id="price-information">
+                                <h2 id="total-price">$00.00</h2>
+                            </div>
+                        </div>
+                        <div class="" id="cart-container">
+                            <div id="title-container">
+                                <h3 style="margin: 0; align-self: center">Order Summary</h3>
+                            </div>
+                            <div id="order-container">
+                                <!-- <div  class="order-item" id="">
+                                    <div id="item-text">
+                                        <h1>title</h1>
+                                        <h6></h6>
+                                    </div>
+                                    <div id="item-details">
+                                        <div id="item-buttons">
+                                            <button>-</button>
+                                            <h3>stock#</h3>
+                                            <button>+</button>
+                                        </div>
+                                        <div id="item-price">
+                                            <h3>$00.00</h3>
+                                        </div>
+                                    </div>
+                                </div> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div id="checkout-place-order">
+                        <!-- <button class="btn btn-primary" id="pay-order-button" onclick="check_emptyCart_checkout(event)">Place Order</button> -->
+                        <button class="btn btn-primary" id="pay-order-button" onclick="showAlert()">Place Order</button>
+
+                        <button class="btn btn-primary" id="clear-order-button" onclick="clear_cartButton()">Clear Order</button>
+
+                        <!-- <h2 id="total-price">$00.00</h2> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CUSTOME ALERT -->
+
+        <div id="customAlert" class="alert-box" style="display: none">
+            <div id="alert-items-top">
+                <p id="alertMessage" style="text-align: center">Favorite this order?</p>
+            </div>
+            <div id="alert-items-bottom">
+                <p style="display: none" id="highest-id">{{current_id}}</p>
+                <button onclick="orderCart(event)">No, just place my order!</button>
+                <button onclick="orderAndFavCart(event)">Yes, favorite my order!</button>
+            </div>
+            <button id="close-alert" onclick="closeAlert()">Close</button>
+        </div>
+
+        <!-- Google Translate Stuff -->
+        <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+        <script type="text/javascript">
+            function googleTranslateElementInit() {
+                new google.translate.TranslateElement({ pageLanguage: "en" }, "google_translate_element");
+            }
+        </script>
+        <!-- End Google Translate Stuff -->
+        <!-- <script src="{% static 'pos/javascript/order_online.js' %}"></script> -->
+        <script src="{% static 'pos/javascript/local_storage.js' %}"></script>
+        <script src="{% static 'pos/javascript/account_details.js' %}"></script>
+
+        <!-- Mobile Elements -->
+    </body>
+</html>
